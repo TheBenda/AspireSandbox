@@ -6,11 +6,18 @@ var dataSource = builder.AddPostgres("dataSource")
 
 var messagingName = "rabbitMqMessaging";
 var rabbitMq = builder.AddRabbitMQ(messagingName)
-    .WithManagementPlugin();
+    .WithManagementPlugin()
+    .WithDataVolume();
 
-var keycloak = builder.AddKeycloak("keycloak", 8080);
+var keycloak = builder.AddKeycloak("keycloak", 8080)
+    .WithDataVolume();
 
-builder.AddProject<Projects.AKS_Presentation>("Presentation")
+builder.AddProject<Projects.AKS_Presentation>("mainBackend")
+    .WithReference(dataSource)
+    .WithReference(rabbitMq)
+    .WithReference(keycloak);
+
+builder.AddProject<Projects.PS_Presentation>("processingBackend")
     .WithReference(dataSource)
     .WithReference(rabbitMq)
     .WithReference(keycloak);

@@ -14,12 +14,12 @@
     <PackageReference Include="Aspire.Hosting.Keycloak" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
     <PackageReference Include="Aspire.Hosting.RabbitMQ" />
-    <PackageReference Include="Aspire.RabbitMQ.Client" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AKS.Presentation\AKS.Presentation.csproj" />
     <ProjectReference Include="..\AKS.DbManager\AKS.DbManager.csproj" />
+    <ProjectReference Include="..\..\processes\PS.Presentation\PS.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

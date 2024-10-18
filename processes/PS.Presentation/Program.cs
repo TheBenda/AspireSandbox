@@ -1,28 +1,26 @@
-using AKS.Infrastructure.Extensions;
-using AKS.Presentation.Extensions.Wolverine;
+using Marten;
+
+using PS.Presentation.Extensions.Marten;
+using PS.Presentation.Extensions.Wolverine;
 
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration; 
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi().ConfigureMarten(configuration.GetConnectionString("dataSource")!);
 builder.AddRabbitMQClient(connectionName: "rabbitMqMessaging");
-builder.Services.AddInfrastructureServices();
 
-var rabbitMqConnection = builder.Configuration.GetConnectionString("rabbitMqMessaging");
+var rabbitMqConnection = configuration.GetConnectionString("rabbitMqMessaging");
 
 builder.Host.ConfigureWolverine(new Uri(rabbitMqConnection!));
 
 builder.AddServiceDefaults();
-builder.AddInfrastructure();
-
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.MapOpenApi();

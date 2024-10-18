@@ -11,14 +11,14 @@
     <PackageReference Include="Scalar.AspNetCore" />
     <PackageReference Include="Aspire.RabbitMQ.Client" />
     <PackageReference Include="WolverineFx" />
+    <PackageReference Include="WolverineFx.Marten" />
     <PackageReference Include="WolverineFx.RabbitMQ" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AKS.Application\AKS.Application.csproj" />
-    <ProjectReference Include="..\AKS.Infrastructure\AKS.Infrastructure.csproj" />
-    <ProjectReference Include="..\AKS.ServiceDefaults\AKS.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\shared\AKS.MessagingContracts\AKS.MessagingContracts.csproj" />
+    <ProjectReference Include="..\..\src\AKS.ServiceDefaults\AKS.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\PS.Infrastructure\PS.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
