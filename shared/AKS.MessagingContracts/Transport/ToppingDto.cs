@@ -1,6 +1,6 @@
 ﻿namespace AKS.MessagingContracts.Transport;
 
-public record class ToppingDto
+public record ToppingDto
 {
 
 }

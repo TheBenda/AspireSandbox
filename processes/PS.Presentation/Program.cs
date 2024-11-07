@@ -1,5 +1,7 @@
 using Marten;
 
+using Oakton.Resources;
+
 using PS.Presentation.Extensions.Marten;
 using PS.Presentation.Extensions.Wolverine;
 
@@ -15,6 +17,8 @@ var rabbitMqConnection = configuration.GetConnectionString("rabbitMqMessaging");
 
 builder.Host.ConfigureWolverine(new Uri(rabbitMqConnection!));
 
+// builder.Services.AddResourceSetupOnStartup();
+
 builder.AddServiceDefaults();
 
 var app = builder.Build();
@@ -26,7 +30,7 @@ if (!app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(options => 
     {
-        options.WithTitle("Persons API")
+        options.WithTitle("Delivery API")
             .WithTheme(ScalarTheme.Moon)
             .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
     });

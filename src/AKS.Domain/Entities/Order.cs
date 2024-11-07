@@ -1,16 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using AKS.Domain.Values;
+
 namespace AKS.Domain.Entities;
 
 public class Order
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; set; }
-    public required DateTime OrderPlaced { get; set; }
-    public DateTime? OrderFulfilled { get; set; }
-    public Guid CustomerId { get; set; }
-    public Customer Customer { get; set; } = null!;
-    public ICollection<OrderDetail> OrderDetails { get; set; } = null!;
+    public Guid Id { get; init; }
+    public required DateTime OrderPlaced { get; init; }
+    public required Address ShipmentAddress { get; set; }
+    public DateTime? OrderFulfilled { get; init; }
+    public DateTime? OrderPayed { get; init; }
+    public DateTime? DeliveryStated { get; init; }
+    public DateTime? DeliveryCompleted { get; init; }
+    public Guid CustomerId { get; init; }
+    public Customer Customer { get; init; } = null!;
+    public ICollection<OrderItem> OrderItems { get; init; } = null!;
 }

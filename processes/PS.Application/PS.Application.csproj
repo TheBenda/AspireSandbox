@@ -5,5 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="WolverineFx" />
+        <PackageReference Include="WolverineFx.Marten" />
+        <PackageReference Include="WolverineFx.RabbitMQ" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\shared\AKS.MessagingContracts\AKS.MessagingContracts.csproj" />
+    </ItemGroup>
 
 </Project>

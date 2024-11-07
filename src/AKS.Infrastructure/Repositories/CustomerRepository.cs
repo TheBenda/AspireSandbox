@@ -12,18 +12,19 @@ namespace AKS.Infrastructure.Repositories;
 
 public class CustomerRepository(PrimaryDbContext primaryDbContext) : ICustomerRepository
 {
-    public async Task CreateCustomerAsync(Customer customer, CancellationToken cancellationToken)
+    public async Task<Customer> CreateCustomerAsync(Customer customer, CancellationToken cancellationToken)
     {
         primaryDbContext.Customers.Add(customer);
         await primaryDbContext
             .SaveChangesAsync(cancellationToken);
+        return customer;
     }
 
     public async Task<PersistenceResult<SuccsefullTransaction>> DeleteCustomerAsync(Guid customerId, CancellationToken cancellationToken)
     {
         var affected = await primaryDbContext.Customers
                 .Where(model => model.Id == customerId)
-                .ExecuteDeleteAsync();
+                .ExecuteDeleteAsync(cancellationToken);
         return affected == 1 ? 
                 PersistenceResult<SuccsefullTransaction>
                     .Success(TypedResult<SuccsefullTransaction>
@@ -54,8 +55,6 @@ public class CustomerRepository(PrimaryDbContext primaryDbContext) : ICustomerRe
                     .SetProperty(m => m.FirstName, customer.FirstName)
                     .SetProperty(m => m.LastName, customer.LastName)
                     .SetProperty(m => m.Address, customer.Address)
-                    .SetProperty(m => m.Phone, customer.Phone)
-                    .SetProperty(m => m.Email, customer.Email)
                     , cancellationToken: cancellationToken);
         return affected == 1 ? 
                 PersistenceResult<Customer>.Success(TypedResult<Customer>.Of(customer)) : 

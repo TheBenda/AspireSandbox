@@ -1,7 +1,7 @@
 ﻿namespace AKS.Domain.Results.Erros;
 
-public class NotFound : AbstractPersistenceError
+public class NotFound(string message) : AbstractPersistenceError(message)
 {
     public static NotFound Empty() =>
-        new();
+        new("");
 }

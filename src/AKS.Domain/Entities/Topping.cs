@@ -6,8 +6,7 @@ namespace AKS.Domain.Entities;
 public class Topping
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
     public required string Name { get; set; }
     public required decimal Price { get; set; }
     public Guid ProductId { get; set; }

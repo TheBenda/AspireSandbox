@@ -1,5 +1,7 @@
 ﻿using Marten;
 
+using Weasel.Core;
+
 using Wolverine.Marten;
 
 namespace PS.Presentation.Extensions.Marten;
@@ -12,6 +14,7 @@ internal static class MartenExtensions
         {
             options.Connection(connectionString);
             options.DatabaseSchemaName = "marten";
+            options.AutoCreateSchemaObjects = AutoCreate.All;
         }).IntegrateWithWolverine();
 
         return services;

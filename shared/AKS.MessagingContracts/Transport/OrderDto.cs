@@ -1,6 +1,6 @@
 ﻿namespace AKS.MessagingContracts.Transport;
 
-public record class OrderDto(Guid CustomerId, List<ProductDto> Products)
+public record OrderDto(Guid CustomerId, List<ProductDto> Products)
 {
 
 }

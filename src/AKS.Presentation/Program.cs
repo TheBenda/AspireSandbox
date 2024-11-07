@@ -7,7 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    
+});
 builder.AddRabbitMQClient(connectionName: "rabbitMqMessaging");
 builder.Services.AddInfrastructureServices();
 
@@ -28,9 +31,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(options => 
     {
-        options.WithTitle("Persons API")
+        options.WithTitle("Orders API")
             .WithTheme(ScalarTheme.Moon)
             .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+        
+        options.Authentication = new ScalarAuthenticationOptions();
     });
 }
 

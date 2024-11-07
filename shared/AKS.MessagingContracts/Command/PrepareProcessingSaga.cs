@@ -2,7 +2,7 @@
 
 namespace AKS.MessagingContracts.Command;
 
-public record class PrepareProcessingSaga(OrderDto Order)
+public record PrepareProcessingSaga(OrderDto Order)
 {
 
 }

@@ -28,21 +28,12 @@ namespace AKS.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Address")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -59,7 +50,16 @@ namespace AKS.Infrastructure.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("DeliveryCompleted")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeliveryStated")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime?>("OrderFulfilled")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("OrderPayed")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("OrderPlaced")
@@ -72,14 +72,21 @@ namespace AKS.Infrastructure.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("AKS.Domain.Entities.OrderDetail", b =>
+            modelBuilder.Entity("AKS.Domain.Entities.OrderItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("OrderId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("OrderId")
                         .HasColumnType("uuid");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
@@ -89,11 +96,42 @@ namespace AKS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "OrderId" }, "IX_OrderDetails_OrderId");
+                    b.HasIndex("OrderId");
 
-                    b.HasIndex(new[] { "ProductId" }, "IX_OrderDetails_ProductId");
+                    b.HasIndex(new[] { "ProductId" }, "IX_OrderItem_ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("AKS.Domain.Entities.OrderToppingItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OrderItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ToppingId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderItemId");
+
+                    b.HasIndex(new[] { "ToppingId" }, "IX_OrderToppingItem_ToppingId");
+
+                    b.ToTable("OrderToppingItems");
                 });
 
             modelBuilder.Entity("AKS.Domain.Entities.Product", b =>
@@ -106,8 +144,8 @@ namespace AKS.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("double precision");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
 
                     b.HasKey("Id");
 
@@ -125,7 +163,7 @@ namespace AKS.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
+                        .HasColumnType("money");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
@@ -137,6 +175,54 @@ namespace AKS.Infrastructure.Migrations
                     b.ToTable("Toppings");
                 });
 
+            modelBuilder.Entity("AKS.Domain.Entities.Customer", b =>
+                {
+                    b.OwnsOne("AKS.Domain.Values.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("CustomerId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasMaxLength(90)
+                                .HasColumnType("character varying(90)");
+
+                            b1.Property<long>("Latitude")
+                                .HasColumnType("bigint");
+
+                            b1.Property<long>("Longitude")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("State")
+                                .HasMaxLength(60)
+                                .HasColumnType("character varying(60)");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasMaxLength(180)
+                                .HasColumnType("character varying(180)");
+
+                            b1.Property<string>("ZipCode")
+                                .IsRequired()
+                                .HasMaxLength(18)
+                                .HasColumnType("character varying(18)");
+
+                            b1.HasKey("CustomerId");
+
+                            b1.ToTable("Customers");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CustomerId");
+                        });
+
+                    b.Navigation("Address");
+                });
+
             modelBuilder.Entity("AKS.Domain.Entities.Order", b =>
                 {
                     b.HasOne("AKS.Domain.Entities.Customer", "Customer")
@@ -145,26 +231,71 @@ namespace AKS.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("AKS.Domain.Values.Address", "ShipmentAddress", b1 =>
+                        {
+                            b1.Property<Guid>("OrderId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasMaxLength(90)
+                                .HasColumnType("character varying(90)");
+
+                            b1.Property<long>("Latitude")
+                                .HasColumnType("bigint");
+
+                            b1.Property<long>("Longitude")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("State")
+                                .HasMaxLength(60)
+                                .HasColumnType("character varying(60)");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasMaxLength(180)
+                                .HasColumnType("character varying(180)");
+
+                            b1.Property<string>("ZipCode")
+                                .IsRequired()
+                                .HasMaxLength(18)
+                                .HasColumnType("character varying(18)");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
                     b.Navigation("Customer");
+
+                    b.Navigation("ShipmentAddress")
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("AKS.Domain.Entities.OrderDetail", b =>
+            modelBuilder.Entity("AKS.Domain.Entities.OrderItem", b =>
                 {
-                    b.HasOne("AKS.Domain.Entities.Order", "Order")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId")
+                    b.HasOne("AKS.Domain.Entities.Order", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId");
+                });
+
+            modelBuilder.Entity("AKS.Domain.Entities.OrderToppingItem", b =>
+                {
+                    b.HasOne("AKS.Domain.Entities.OrderItem", "OrderItem")
+                        .WithMany("OrderToppingItems")
+                        .HasForeignKey("OrderItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AKS.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
+                    b.Navigation("OrderItem");
                 });
 
             modelBuilder.Entity("AKS.Domain.Entities.Topping", b =>
@@ -185,7 +316,12 @@ namespace AKS.Infrastructure.Migrations
 
             modelBuilder.Entity("AKS.Domain.Entities.Order", b =>
                 {
-                    b.Navigation("OrderDetails");
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("AKS.Domain.Entities.OrderItem", b =>
+                {
+                    b.Navigation("OrderToppingItems");
                 });
 
             modelBuilder.Entity("AKS.Domain.Entities.Product", b =>

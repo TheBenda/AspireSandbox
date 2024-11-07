@@ -6,8 +6,7 @@ namespace AKS.Domain.Entities;
 public class OrderDetail
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
     public required int Quantity { get; set; }
     public Guid ProductId { get; set; }
     public Guid OrderId { get; set; }

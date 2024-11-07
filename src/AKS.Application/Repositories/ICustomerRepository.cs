@@ -9,6 +9,6 @@ public interface ICustomerRepository
     public Task<List<Customer>> GetCustomersAsync(CancellationToken cancellationToken);
     public Task<PersistenceResult<Customer>> GetCustomerAsync(Guid customerId, CancellationToken cancellationToken);
     public Task<PersistenceResult<Customer>> UpdateCustomerAsync(Guid customerId, Customer customer, CancellationToken cancellationToken);
-    public Task CreateCustomerAsync(Customer customer, CancellationToken cancellationToken);
+    public Task<Customer> CreateCustomerAsync(Customer customer, CancellationToken cancellationToken);
     public Task<PersistenceResult<SuccsefullTransaction>> DeleteCustomerAsync(Guid customerId, CancellationToken cancellationToken);
 }
