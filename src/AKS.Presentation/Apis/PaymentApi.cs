@@ -6,7 +6,7 @@ namespace AKS.Presentation.Apis;
 
 public static class PaymentApi
 {
-    public static void MapCustomerEndpoints(this IEndpointRouteBuilder routes)
+    public static void MapPaymentEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Payment").WithTags("Payment")
             .WithDisplayName("Endpoints regarding finishing a order, by paying it.");

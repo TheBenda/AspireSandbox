@@ -2,7 +2,7 @@
 using AKS.Application.Repositories;
 using AKS.Domain.Entities;
 using AKS.Domain.Results;
-using AKS.Domain.Results.Erros;
+using AKS.Domain.Results.Errors;
 using AKS.Domain.Results.Status;
 using AKS.Infrastructure.Data;
 

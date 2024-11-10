@@ -1,7 +1,8 @@
 ﻿using AKS.Application.UseCases.Customers.Create;
 using AKS.Application.UseCases.Customers.Delete;
 using AKS.Application.UseCases.Customers.GetAll;
-using AKS.Domain.Entities;
+using AKS.Application.UseCases.Customers.GetById;
+using AKS.Application.UseCases.Customers.Transport;
 using AKS.Domain.Results;
 
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -15,7 +16,7 @@ public static class CustomerApi
 {
     public static void MapCustomerEndpoints (this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/api/Customer").WithTags(nameof(Customer));
+        var group = routes.MapGroup("/api/Customer").WithTags("Customer");
 
         group.MapGet("/", async Task<Results<Ok<CustomersFound>, ProblemHttpResult>> (IMessageBus messageBus, CancellationToken cancellationToken) =>
         {
@@ -25,10 +26,16 @@ public static class CustomerApi
         .WithName("GetAllCustomers")
         .WithOpenApi();
 
-        group.MapGet("/{id}", async Task<Results<Ok<Customer>, NotFound>> (Guid id, IMessageBus messageBus, CancellationToken cancellationToken) =>
-        {
-            return TypedResults.NotFound();
-        })
+        group.MapGet("/{id}", async Task<Results<Ok<CustomerDto>, NotFound>> (Guid id, IMessageBus messageBus, CancellationToken cancellationToken) => 
+            {
+                var foundCustomerResult = await messageBus.InvokeAsync<CustomerFound>(FindCustomer.New(id), cancellationToken).ConfigureAwait(false);
+
+                return foundCustomerResult.Customer.Type switch
+                {
+                    ResultType.Result => TypedResults.Ok(foundCustomerResult.Customer.Result!.Value),
+                    _ => TypedResults.NotFound()
+                };
+            })
         .WithName("GetCustomerById")
         .WithOpenApi();
 
@@ -46,7 +53,7 @@ public static class CustomerApi
                 return customerDeleted.Result.Type switch
                 {
                     ResultType.Result => TypedResults.Ok(),
-                    _ => TypedResults.NotFound<ProblemDetails>(new ProblemDetails
+                    _ => TypedResults.NotFound(new ProblemDetails
                     {
                         Title = "Customer not found",
                         Detail = customerDeleted.Result.Error?.Message,

@@ -8,6 +8,6 @@ public static class FindCustomersHandler
     public static async Task<CustomersFound> Handle(FindCustomers request, ICustomerRepository repository, CancellationToken cancellationToken)
     {
         var customers = await repository.GetCustomersAsync(cancellationToken).ConfigureAwait(false);
-        return CustomersFound.New(customers.MapToCustomerList());
+        return CustomersFound.New(customers.MapToCustomerDtos());
     }
 }

@@ -1,15 +1,10 @@
+using AKS.Application.UseCases.Customers.Transport;
+using AKS.Domain.Results;
+
 namespace AKS.Application.UseCases.Customers.GetById;
 
-public record CustomerFound(Guid Id,
-string FirstName,
-string LastName,
-string? Street,
-string? City,
-string? State,
-string? Country,
-string? ZipCode,
-long Latitude,
-long Longitude)
+public record CustomerFound(PersistenceResult<CustomerDto> Customer)
 {
-    
+    public static CustomerFound New(PersistenceResult<CustomerDto> customer) 
+        => new CustomerFound(customer);
 }

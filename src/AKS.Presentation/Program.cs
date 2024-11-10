@@ -1,4 +1,5 @@
 using AKS.Infrastructure.Extensions;
+using AKS.Presentation.Extensions.Api;
 using AKS.Presentation.Extensions.Wolverine;
 
 using Scalar.AspNetCore;
@@ -40,5 +41,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapEndpoints();
 
 app.Run();
