@@ -9,5 +9,5 @@ public record CustomerCreated(
     string? State,
     string? Country,
     string? ZipCode,
-    long Latitude,
-    long Longitude);
+    double Latitude,
+    double Longitude);

@@ -1,4 +1,5 @@
-﻿using AKS.MessagingContracts;
+﻿using AKS.Application.Extensions;
+using AKS.MessagingContracts;
 using AKS.MessagingContracts.Command;
 
 using Wolverine;
@@ -12,16 +13,17 @@ internal static class WolverineExtensions
     {
         hostBuilder.UseWolverine(options =>
             {
-                options
-                    .PublishMessage<PrepareProcessingSaga>()
-                    .ToRabbitExchange(MessagingConstants.ProcessingExchange, exchange => {
-                        exchange.ExchangeType = ExchangeType.Direct;
-                        exchange.BindQueue(MessagingConstants.ProcessesQueue);
-                    });
- 
-                options
-                    .UseRabbitMq(connectionString)
-                    .AutoProvision();
+                // options
+                //     .PublishMessage<PrepareProcessingSaga>()
+                //     .ToRabbitExchange(MessagingConstants.ProcessingExchange, exchange => {
+                //         exchange.ExchangeType = ExchangeType.Direct;
+                //         exchange.BindQueue(MessagingConstants.ProcessesQueue);
+                //     });
+                //
+                // options
+                //     .UseRabbitMq(connectionString)
+                //     .AutoProvision();
+                options.Discovery.IncludeAssembly(typeof(ApplicationsExtensions).Assembly);
             });
         return hostBuilder;
     }
