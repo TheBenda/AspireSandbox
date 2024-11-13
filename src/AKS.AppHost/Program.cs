@@ -1,10 +1,10 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var dataSource = builder.AddPostgres("dataSource")
+var dataSource = builder.AddPostgres("PostgresDbConnection")
     .WithDataVolume()
     .AddDatabase("DataSourceDb");
 
-var messagingName = "rabbitMqMessaging";
+var messagingName = "RabbitMqMessagingConnection";
 var rabbitMq = builder.AddRabbitMQ(messagingName)
     .WithManagementPlugin()
     .WithDataVolume();

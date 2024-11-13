@@ -42,7 +42,7 @@ public static class ProductApi
                     })
                 };
             })
-            .WithName("DeleteCustomer")
+            .WithName("DeleteProduct")
             .WithOpenApi();
         // Get All Products
         group.MapGet("/",
@@ -85,7 +85,7 @@ public static class ProductApi
                     })
                 };
             })
-            .WithName("DeleteCustomer")
+            .WithName("DeleteTopping")
             .WithOpenApi();
     }
 }

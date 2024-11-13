@@ -7,6 +7,6 @@ public class Address
     public string? State { get; init; }
     public string? Country { get; init; }
     public string? ZipCode { get; init; }
-    public long Latitude { get; init; }
-    public long Longitude { get; init; }
+    public double Latitude { get; init; }
+    public double Longitude { get; init; }
 }

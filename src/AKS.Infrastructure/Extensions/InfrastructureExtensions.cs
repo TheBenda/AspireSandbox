@@ -27,7 +27,7 @@ public static class InfrastructureExtensions
 
     public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder services)
     {
-        services.AddNpgsqlDbContext<PrimaryDbContext>(ServiceConstants.DatabaseName);
+        services.AddNpgsqlDbContext<PrimaryDbContext>(ServiceConstants.PostgresDbConnection);
         return services;
     }
 }

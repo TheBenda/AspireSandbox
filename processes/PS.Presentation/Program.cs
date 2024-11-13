@@ -1,3 +1,5 @@
+using AKS.ServiceDefaults;
+
 using Marten;
 
 using Oakton.Resources;
@@ -10,10 +12,13 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration; 
 
-builder.Services.AddOpenApi().ConfigureMarten(configuration.GetConnectionString("dataSource")!);
-builder.AddRabbitMQClient(connectionName: "rabbitMqMessaging");
+builder.Services
+    .AddOpenApi()
+    .ConfigureMarten(configuration.GetConnectionString(ServiceConstants.PostgresDbConnection)!);
 
-var rabbitMqConnection = configuration.GetConnectionString("rabbitMqMessaging");
+builder.AddRabbitMQClient(connectionName: ServiceConstants.RabbitMqConnection);
+
+var rabbitMqConnection = configuration.GetConnectionString(ServiceConstants.RabbitMqConnection);
 
 builder.Host.ConfigureWolverine(new Uri(rabbitMqConnection!));
 
