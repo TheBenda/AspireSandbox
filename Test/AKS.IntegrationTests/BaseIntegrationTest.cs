@@ -12,6 +12,8 @@ using Testcontainers.RabbitMq;
 
 using TUnit.Core.Interfaces;
 
+using Wolverine;
+
 namespace AKS.IntegrationTests;
 
 public class BaseIntegrationTest : IAsyncInitializer, IAsyncDisposable
@@ -26,6 +28,7 @@ public class BaseIntegrationTest : IAsyncInitializer, IAsyncDisposable
         .Build();
     
     private WebApplicationFactory<Program> _webApplicationFactory = default!;
+    public IMessageBus MessageBus = default!;
     
     public const string AdminToken = nameof(AdminToken);
     public const string UserToken = nameof(UserToken);
@@ -39,9 +42,13 @@ public class BaseIntegrationTest : IAsyncInitializer, IAsyncDisposable
         
         // ensure server started
         _ = _webApplicationFactory.Server;
+        
+        using var serviceScope = _webApplicationFactory.Services.CreateScope();
 
-        await using var context = _webApplicationFactory.Services.GetRequiredService<PrimaryDbContext>();
+        var context = serviceScope.ServiceProvider.GetRequiredService<PrimaryDbContext>();
         await context.Database.MigrateAsync();
+
+        MessageBus = serviceScope.ServiceProvider.GetRequiredService<IMessageBus>();
     }
     
 
