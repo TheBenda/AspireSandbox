@@ -1,6 +1,6 @@
 namespace AKS.Application.UseCases.Toppings.Delete;
 
-public record DeleteTopping(Guid ToppingId)
+public record DeleteTopping(Guid ProductId, Guid ToppingId)
 {
-    public static DeleteTopping New(Guid toppingId) => new(toppingId);
+    public static DeleteTopping New(Guid productId, Guid toppingId) => new(productId, toppingId);
 }
