@@ -16,7 +16,9 @@ public static class ProductsExtensions
         => new ToppingDto(topping.Id, topping.Name, topping.Price);
 
 
-    private static List<ToppingDto> ToDtoList(this ICollection<Topping> toppings)
-        =>  toppings.Select(t => t.ToDto()).ToList();
+    private static List<ToppingDto> ToDtoList(this ICollection<Topping>? toppings)
+    {
+        return toppings is null ? [] : toppings.Select(t => t.ToDto()).ToList();
+    }
     
 }
