@@ -31,7 +31,7 @@ public class ProductWriteRepository(PrimaryDbContext dbContext) : IProductWriteR
             PersistenceResult<SuccsefullTransaction>.Failure(NotFound.Empty());
     }
 
-    public async Task<PersistenceResult<Topping>> CreateToppingToProductAsync(Guid productId, Topping topping, CancellationToken cancellationToken)
+    public async Task<PersistenceResult<Product>> CreateToppingToProductAsync(Guid productId, Topping topping, CancellationToken cancellationToken)
     {
         var foundProduct = await dbContext.Products
             .Where(model => model.Id == productId)
@@ -39,12 +39,12 @@ public class ProductWriteRepository(PrimaryDbContext dbContext) : IProductWriteR
             .SingleOrDefaultAsync(cancellationToken);
         
         if (foundProduct is null)
-            return PersistenceResult<Topping>.Failure(NotFound.WithMessage($"Unable to add new Topping to Product with id: {productId} - Product was not found."));
+            return PersistenceResult<Product>.Failure(NotFound.WithMessage($"Unable to add new Topping to Product with id: {productId} - Product was not found."));
         
         foundProduct.Toppings.Add(topping);
         await dbContext.SaveChangesAsync(cancellationToken);
         
-        return PersistenceResult<Topping>.Success(TypedResult<Topping>.Of(topping));
+        return PersistenceResult<Product>.Success(TypedResult<Product>.Of(foundProduct));
     }
 
     public async Task<PersistenceResult<SuccsefullTransaction>> DeleteToppingAsync(Guid productId, Guid toppingId, CancellationToken cancellationToken)

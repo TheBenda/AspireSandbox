@@ -8,6 +8,6 @@ public interface IProductWriteRepository
 {
     Task<Product> CreateProductAsync(Product product, CancellationToken cancellationToken);
     Task<PersistenceResult<SuccsefullTransaction>> DeleteProductAsync(Guid productId, CancellationToken cancellationToken);
-    Task<PersistenceResult<Topping>> CreateToppingToProductAsync(Guid productId, Topping topping, CancellationToken cancellationToken);
-    Task<PersistenceResult<SuccsefullTransaction>> DeleteToppingAsync(Guid oriductId, Guid toppingId, CancellationToken cancellationToken);
+    Task<PersistenceResult<Product>> CreateToppingToProductAsync(Guid productId, Topping topping, CancellationToken cancellationToken);
+    Task<PersistenceResult<SuccsefullTransaction>> DeleteToppingAsync(Guid productId, Guid toppingId, CancellationToken cancellationToken);
 }
