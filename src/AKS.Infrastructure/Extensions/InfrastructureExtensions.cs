@@ -18,9 +18,9 @@ public static class InfrastructureExtensions
     {
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IOrderReadRepository, OrderReadRepository>();
-        services.AddScoped<IOrderWriteRepository, OrderWriteWriteRepository>();
-        services.AddScoped<IProductReadRepository, ProductReadRepository>();
-        services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
+        services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
+        services.AddScoped<IUnitReadRepository, UnitReadRepository>();
+        services.AddScoped<IUnitWriteRepository, UnitWriteRepository>();
         
         return services;
     }

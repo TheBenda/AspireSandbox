@@ -1,4 +1,5 @@
-﻿using AKS.Application.UseCases.Orders.Create;
+﻿using AKS.Application.UseCases.OrderItems.Create;
+using AKS.Application.UseCases.Orders.Create;
 using AKS.Application.UseCases.Orders.Delete;
 using AKS.Domain.Entities;
 using AKS.Domain.Results;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 using Wolverine;
+using Wolverine.Runtime;
 
 namespace AKS.Presentation.Apis;
 
@@ -24,7 +26,16 @@ public static class OrderApi
             .WithName("CreateEmptyOrder")
             .WithOpenApi();
 
-        group.MapDelete("/{id}", async Task<Results<Ok, NotFound<ProblemDetails>>> (Guid id, IMessageBus messageBus, CancellationToken cancellationToken) => 
+        group.MapPost("/{orderId:guid}/add/product/{productId:guid}",
+            async Task<Results<Ok, NotFound<ProblemDetails>>> (Guid orderId, Guid productId,
+                IMessageBus messageBus,
+                CancellationToken cancellationToken) =>
+            {
+                var result = await messageBus.InvokeAsync<OrderItemCreated>(CreateOrderItem.New(orderId, productId), cancellationToken);
+                return TypedResults.NotFound(new ProblemDetails());
+            });
+
+        group.MapDelete("/{id:guid}", async Task<Results<Ok, NotFound<ProblemDetails>>> (Guid id, IMessageBus messageBus, CancellationToken cancellationToken) => 
             {
                 var customerDeleted = await messageBus.InvokeAsync<OrderDeleted>(DeleteOrder.New(id), cancellationToken);
                 return customerDeleted.Result.Type switch

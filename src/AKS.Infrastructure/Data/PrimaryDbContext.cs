@@ -13,9 +13,9 @@ public class PrimaryDbContext(DbContextOptions<PrimaryDbContext> dbContextOption
 {
     public DbSet<Customer> Customers { get; set; } = null!;
     public DbSet<Order> Orders { get; set; } = null!;
-    public DbSet<Product> Products { get; set; } = null!;
+    public DbSet<Unit> Units { get; set; } = null!;
     //public DbSet<OrderDetail> OrderDetails { get; set; } = null!;
-    public DbSet<Topping> Toppings { get; set; } = null!;
+    public DbSet<Equipment> Equipments { get; set; } = null!;
     public DbSet<OrderItem> OrderItems { get; set; } = null!;
     public DbSet<OrderToppingItem> OrderToppingItems { get; set; } = null!;
 

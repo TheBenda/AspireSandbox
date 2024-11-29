@@ -8,7 +8,7 @@ internal static class ApiExtensions
     {
         routes.MapCustomerEndpoints();
         routes.MapOrderEndpoints();
-        routes.MapProductEndpoints();
+        routes.MapUnitEndpoints();
         routes.MapPaymentEndpoints();
     }
 }

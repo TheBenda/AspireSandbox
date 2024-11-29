@@ -7,7 +7,7 @@ namespace AKS.Application.Repositories;
 public interface IOrderWriteRepository
 {
     Task<Order> CreateAsync(Order order, CancellationToken cancellationToken);
-    Task<PersistenceResult<Order>> AddProductToOrderAsync(Guid orderId, OrderItem orderItem, CancellationToken cancellationToken);
+    Task<PersistenceResult<Order>> AddProductToOrderAsync(Guid orderId, Guid productId, CancellationToken cancellationToken);
     Task<PersistenceResult<Order>> AddToppingToProductsOrderAsync(Guid orderId, Guid orderItemId, OrderToppingItem orderToppingItem, CancellationToken cancellationToken);
     Task<PersistenceResult<SuccsefullTransaction>> DeleteAsync(Guid orderId, CancellationToken cancellationToken);
     Task<PersistenceResult<SuccsefullTransaction>> DelelteProductFromOrderAsync(Guid orderId, Guid orderItemId, CancellationToken cancellationToken);
