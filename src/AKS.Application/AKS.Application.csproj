@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UseCases\OrderItems\Delete\" />
+    <Folder Include="UseCases\BattleGroupUnits\Delete\" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -15,5 +15,5 @@ public class Customer
     public Address? Address { get; init; }
 
 
-    public ICollection<Order> Orders { get; init; } = null!;
+    public ICollection<BattleGroup> Orders { get; init; } = null!;
 }

@@ -4,11 +4,11 @@ using AKS.Domain.Results.Status;
 
 namespace AKS.Application.Repositories;
 
-public interface IOrderWriteRepository
+public interface IBattleGroupWriteRepository
 {
-    Task<Order> CreateAsync(Order order, CancellationToken cancellationToken);
-    Task<PersistenceResult<Order>> AddProductToOrderAsync(Guid orderId, Guid productId, CancellationToken cancellationToken);
-    Task<PersistenceResult<Order>> AddToppingToProductsOrderAsync(Guid orderId, Guid orderItemId, OrderToppingItem orderToppingItem, CancellationToken cancellationToken);
+    Task<BattleGroup> CreateAsync(BattleGroup battleGroup, CancellationToken cancellationToken);
+    Task<PersistenceResult<BattleGroup>> AddProductToOrderAsync(Guid orderId, Guid productId, CancellationToken cancellationToken);
+    Task<PersistenceResult<BattleGroup>> AddToppingToProductsOrderAsync(Guid orderId, Guid orderItemId, BattleGroupUnitEquipment battleGroupUnitEquipment, CancellationToken cancellationToken);
     Task<PersistenceResult<SuccsefullTransaction>> DeleteAsync(Guid orderId, CancellationToken cancellationToken);
     Task<PersistenceResult<SuccsefullTransaction>> DelelteProductFromOrderAsync(Guid orderId, Guid orderItemId, CancellationToken cancellationToken);
     Task<PersistenceResult<SuccsefullTransaction>> DeleteToppingFromProductsOrderAsync(Guid orderId, Guid orderItemId, Guid orderToppingId, CancellationToken cancellationToken);

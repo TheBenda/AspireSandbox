@@ -17,8 +17,8 @@ public static class InfrastructureExtensions
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<ICustomerRepository, CustomerRepository>();
-        services.AddScoped<IOrderReadRepository, OrderReadRepository>();
-        services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
+        services.AddScoped<IBattleGroupReadRepository, BattleGroupReadRepository>();
+        services.AddScoped<IBattleGroupWriteRepository, BattleGroupWriteRepository>();
         services.AddScoped<IUnitReadRepository, UnitReadRepository>();
         services.AddScoped<IUnitWriteRepository, UnitWriteRepository>();
         

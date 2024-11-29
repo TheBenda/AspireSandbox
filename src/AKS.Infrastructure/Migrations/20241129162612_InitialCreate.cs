@@ -52,29 +52,19 @@ namespace AKS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "BattleGroups",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrderPlaced = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ShipmentAddress_Street = table.Column<string>(type: "character varying(180)", maxLength: 180, nullable: false),
-                    ShipmentAddress_City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    ShipmentAddress_State = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: true),
-                    ShipmentAddress_Country = table.Column<string>(type: "character varying(90)", maxLength: 90, nullable: false),
-                    ShipmentAddress_ZipCode = table.Column<string>(type: "character varying(18)", maxLength: 18, nullable: false),
-                    ShipmentAddress_Latitude = table.Column<double>(type: "double precision", nullable: false),
-                    ShipmentAddress_Longitude = table.Column<double>(type: "double precision", nullable: false),
-                    OrderFulfilled = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    OrderPayed = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    DeliveryStated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    DeliveryCompleted = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    GroupCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    GroupName = table.Column<string>(type: "text", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.PrimaryKey("PK_BattleGroups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Customers_CustomerId",
+                        name: "FK_BattleGroups_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "Id",
@@ -104,97 +94,104 @@ namespace AKS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderItems",
+                name: "BattleGroupUnits",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UnitId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BattleGroupId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false),
-                    Price = table.Column<decimal>(type: "money", nullable: false)
+                    Rule = table.Column<string>(type: "text", nullable: true),
+                    Health = table.Column<int>(type: "integer", nullable: false),
+                    Attack = table.Column<int>(type: "integer", nullable: false),
+                    Defense = table.Column<int>(type: "integer", nullable: false),
+                    Movement = table.Column<int>(type: "integer", nullable: false),
+                    Range = table.Column<decimal>(type: "numeric", nullable: false),
+                    Accuracy = table.Column<int>(type: "integer", nullable: false),
+                    Points = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItems", x => x.Id);
+                    table.PrimaryKey("PK_BattleGroupUnits", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
+                        name: "FK_BattleGroupUnits_BattleGroups_BattleGroupId",
+                        column: x => x.BattleGroupId,
+                        principalTable: "BattleGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderToppingItems",
+                name: "BattleGroupUnitEquipments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ToppingId = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrderItemId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EquipmentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BattleGroupUnitId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false),
-                    Price = table.Column<decimal>(type: "money", nullable: false)
+                    Rule = table.Column<string>(type: "text", nullable: true),
+                    Attack = table.Column<int>(type: "integer", nullable: true),
+                    Points = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderToppingItems", x => x.Id);
+                    table.PrimaryKey("PK_BattleGroupUnitEquipments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderToppingItems_OrderItems_OrderItemId",
-                        column: x => x.OrderItemId,
-                        principalTable: "OrderItems",
+                        name: "FK_BattleGroupUnitEquipments_BattleGroupUnits_BattleGroupUnitId",
+                        column: x => x.BattleGroupUnitId,
+                        principalTable: "BattleGroupUnits",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Units_UnitId",
-                table: "Equipments",
-                column: "UnitId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItem_ProductId",
-                table: "OrderItems",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrderId",
-                table: "OrderItems",
-                column: "OrderId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerId",
-                table: "Orders",
+                table: "BattleGroups",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderToppingItem_ToppingId",
-                table: "OrderToppingItems",
-                column: "ToppingId");
+                name: "IX_BattleGroupUnitEquipment_EquipmentId",
+                table: "BattleGroupUnitEquipments",
+                column: "EquipmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderToppingItems_OrderItemId",
-                table: "OrderToppingItems",
-                column: "OrderItemId");
+                name: "IX_BattleGroupUnitEquipments_BattleGroupUnitId",
+                table: "BattleGroupUnitEquipments",
+                column: "BattleGroupUnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BattleGroupUnit_UnitId",
+                table: "BattleGroupUnits",
+                column: "UnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BattleGroupUnits_BattleGroupId",
+                table: "BattleGroupUnits",
+                column: "BattleGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Units_UnitId",
+                table: "Equipments",
+                column: "UnitId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "BattleGroupUnitEquipments");
+
+            migrationBuilder.DropTable(
                 name: "Equipments");
 
             migrationBuilder.DropTable(
-                name: "OrderToppingItems");
+                name: "BattleGroupUnits");
 
             migrationBuilder.DropTable(
                 name: "Units");
 
             migrationBuilder.DropTable(
-                name: "OrderItems");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
+                name: "BattleGroups");
 
             migrationBuilder.DropTable(
                 name: "Customers");
