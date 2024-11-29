@@ -2,6 +2,8 @@ using AKS.Domain.Entities;
 using AKS.Domain.Results;
 using AKS.Domain.Results.Status;
 
+using Guid = System.Guid;
+
 namespace AKS.Application.Repositories;
 
 public interface IUnitWriteRepository

@@ -5,7 +5,7 @@ namespace AKS.Domain.Entities;
 public class Unit
 {
     [Key]
-    public Guid Id { get; init; }
+    public System.Guid Id { get; init; }
     public required string Name { get; init; }
     public string? Rule { get; init; }
     public required int Health { get; init; }

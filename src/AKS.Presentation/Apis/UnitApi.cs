@@ -15,6 +15,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using Wolverine;
 
+using Guid = System.Guid;
+
 namespace AKS.Presentation.Apis;
 
 public static class UnitApi

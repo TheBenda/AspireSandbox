@@ -7,6 +7,8 @@ using AKS.Infrastructure.Data;
 
 using Microsoft.EntityFrameworkCore;
 
+using Guid = System.Guid;
+
 namespace AKS.Infrastructure.Repositories;
 
 public class UnitWriteRepository(PrimaryDbContext dbContext) : IUnitWriteRepository

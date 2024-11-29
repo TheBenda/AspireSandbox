@@ -6,6 +6,8 @@ using AKS.Infrastructure.Data;
 
 using Microsoft.EntityFrameworkCore;
 
+using Guid = System.Guid;
+
 namespace AKS.Infrastructure.Repositories;
 
 public class UnitReadRepository(PrimaryDbContext dbContext) : IUnitReadRepository

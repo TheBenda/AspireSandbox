@@ -19,62 +19,82 @@ public class BattleGroupWriteRepository(PrimaryDbContext dbContext) : IBattleGro
         return battleGroup;
     }
 
-    public async Task<PersistenceResult<BattleGroup>> AddProductToOrderAsync(Guid orderId, Guid productId, CancellationToken cancellationToken)
+    public async Task<PersistenceResult<BattleGroup>> AddUnitToBattleGroupAsync(Guid battleGroupId, Guid unitId, CancellationToken cancellationToken)
     {
-        var foundOrder = await dbContext.BattleGroups
-            .Where(model => model.Id == orderId)
+        var foundBattleGroup = await dbContext.BattleGroups
+            .Where(model => model.Id == battleGroupId)
             .Include(e => e.BattleGroupUnits)
             .SingleOrDefaultAsync(cancellationToken);
         
-        if (foundOrder is null)
-            return PersistenceResult<BattleGroup>.Failure(NotFound.WithMessage($"Unable to add OrderItem, as no Order with id: {orderId} was found."));
+        if (foundBattleGroup is null)
+            return PersistenceResult<BattleGroup>.Failure(NotFound.WithMessage($"Unable to add Unit to Group, as no BattleGroup with id: {battleGroupId} was found."));
         
-        var foundProduct = await dbContext.Units
+        var foundUnit = await dbContext.Units
             .AsNoTracking()
-            .Where(model => model.Id == productId)
+            .Where(model => model.Id == unitId)
             .SingleOrDefaultAsync(cancellationToken);
         
-        if (foundProduct is null)
-            return PersistenceResult<BattleGroup>.Failure(NotFound.WithMessage($"Unable to add OrderItem, as no Product with id: {productId} was found."));
+        if (foundUnit is null)
+            return PersistenceResult<BattleGroup>.Failure(NotFound.WithMessage($"Unable to add Unit to Group, as no Unit with id: {unitId} was found."));
+
+        var battleGroupUnit = new BattleGroupUnit
+        {
+            Name = foundUnit.Name,
+            Rule = foundUnit.Rule,
+            Health = foundUnit.Health,
+            Attack = foundUnit.Attack,
+            Defense = foundUnit.Defense,
+            Movement = foundUnit.Movement,
+            Range = foundUnit.Range,
+            Accuracy = foundUnit.Accuracy,
+            Points = foundUnit.Points
+        };
         
-        // var orderItem = new OrderItem
-        // {
-        //     Name = foundProduct.Name,
-        //     Price = foundProduct.Price,
-        //     Quantity = 1,
-        //     ProductId = foundProduct.Id
-        // };
-        
-        // foundOrder.OrderItems.Add(orderItem);
+        foundBattleGroup.BattleGroupUnits.Add(battleGroupUnit);
         
         await dbContext.SaveChangesAsync(cancellationToken);
-        return PersistenceResult<BattleGroup>.Success(TypedResult<BattleGroup>.Of(foundOrder));
+        return PersistenceResult<BattleGroup>.Success(TypedResult<BattleGroup>.Of(foundBattleGroup));
     }
 
-    public async Task<PersistenceResult<BattleGroup>> AddToppingToProductsOrderAsync(Guid orderId, Guid orderItemId, BattleGroupUnitEquipment battleGroupUnitEquipment,
+    public async Task<PersistenceResult<BattleGroup>> AddToppingToProductsOrderAsync(Guid battleGroupId, Guid battleGroupUnitId, Guid equipmentId,
         CancellationToken cancellationToken)
     {
-        var foundOrder = await dbContext.BattleGroups
-            .Where(model => model.Id == orderId)
+        var foundBattleGroup = await dbContext.BattleGroups
+            .Where(model => model.Id == battleGroupId)
             .Include(e => e.BattleGroupUnits)
             .SingleOrDefaultAsync(cancellationToken);
         
-        if (foundOrder is null)
-            return PersistenceResult<BattleGroup>.Failure(NotFound.WithMessage($"Unable to add OrderToppingItem, as no Order with id: {orderId} was found."));
+        if (foundBattleGroup is null)
+            return PersistenceResult<BattleGroup>.Failure(NotFound.WithMessage($"Unable to add BattleGroupUnitEquipment, as no BattleGroup with id: {battleGroupId} was found."));
         
-        var foundOrderItem = await dbContext.BattleGroupUnits
-            .Where(model => model.Id == orderItemId)
+        var foundBattleGroupUnit = await dbContext.BattleGroupUnits
+            .Where(model => model.Id == battleGroupUnitId)
             .Include(e => e.BattleGroupUnitEquipments)
             .SingleOrDefaultAsync(cancellationToken);
         
-        if (foundOrderItem is null)
-            return PersistenceResult<BattleGroup>.Failure(NotFound.WithMessage($"Unable to add OrderToppingItem, as no OrderItem with id: {orderItemId} was found."));
+        if (foundBattleGroupUnit is null)
+            return PersistenceResult<BattleGroup>.Failure(NotFound.WithMessage($"Unable to add BattleGroupUnitEquipment, as no BattleGroupUnit with id: {battleGroupUnitId} was found."));
         
-        foundOrderItem.BattleGroupUnitEquipments.Add(battleGroupUnitEquipment);
+        var foundEquipment = await dbContext.Equipments
+            .AsNoTracking()
+            .Where(model => model.Id == equipmentId)
+            .SingleOrDefaultAsync(cancellationToken);
+        
+        if (foundEquipment is null)
+            return PersistenceResult<BattleGroup>.Failure(NotFound.WithMessage($"Unable to add BattleGroupUnitEquipment, as no Equipment with id: {battleGroupUnitId} was found."));
+
+        var battleGroupUnitEquipment = new BattleGroupUnitEquipment
+        {
+            Name = foundEquipment.Name,
+            Rule = foundEquipment.Rule,
+            Attack = foundEquipment.Attack,
+            Points = foundEquipment.Points
+        };
+        foundBattleGroupUnit.BattleGroupUnitEquipments.Add(battleGroupUnitEquipment);
         
         await dbContext.SaveChangesAsync(cancellationToken);
-        // TODO: proof that added OrderToppingItem is projected into Order
-        return PersistenceResult<BattleGroup>.Success(TypedResult<BattleGroup>.Of(foundOrder));
+        
+        return PersistenceResult<BattleGroup>.Success(TypedResult<BattleGroup>.Of(foundBattleGroup));
     }
 
     public async Task<PersistenceResult<SuccsefullTransaction>> DeleteAsync(Guid orderId, CancellationToken cancellationToken)
