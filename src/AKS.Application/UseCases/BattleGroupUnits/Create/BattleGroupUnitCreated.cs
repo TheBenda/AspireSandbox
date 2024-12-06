@@ -3,4 +3,4 @@ using AKS.Domain.Results;
 
 namespace AKS.Application.UseCases.BattleGroupUnits.Create;
 
-public record BattleGroupUnitCreated(PersistenceResult<BattleGroupDto> Order);
+public record BattleGroupUnitCreated(PersistenceResult<BattleGroupDto> BattleGroupResult);
