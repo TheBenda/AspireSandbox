@@ -1,4 +1,4 @@
-using AKS.Application.UseCases.Orders.Pay;
+using AKS.Application.UseCases.BattleGroups.Pay;
 
 using Wolverine;
 

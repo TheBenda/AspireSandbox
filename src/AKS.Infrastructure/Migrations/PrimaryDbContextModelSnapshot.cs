@@ -22,6 +22,112 @@ namespace AKS.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("AKS.Domain.Entities.BattleGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("GroupCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "CustomerId" }, "IX_Orders_CustomerId");
+
+                    b.ToTable("BattleGroups");
+                });
+
+            modelBuilder.Entity("AKS.Domain.Entities.BattleGroupUnit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Accuracy")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Attack")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("BattleGroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Defense")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Health")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Movement")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Points")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Range")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Rule")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BattleGroupId");
+
+                    b.HasIndex(new[] { "UnitId" }, "IX_BattleGroupUnit_UnitId");
+
+                    b.ToTable("BattleGroupUnits");
+                });
+
+            modelBuilder.Entity("AKS.Domain.Entities.BattleGroupUnitEquipment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("Attack")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("BattleGroupUnitId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("EquipmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Points")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Rule")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BattleGroupUnitId");
+
+                    b.HasIndex(new[] { "EquipmentId" }, "IX_BattleGroupUnitEquipment_EquipmentId");
+
+                    b.ToTable("BattleGroupUnitEquipments");
+                });
+
             modelBuilder.Entity("AKS.Domain.Entities.Customer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -41,138 +147,105 @@ namespace AKS.Infrastructure.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("AKS.Domain.Entities.Order", b =>
+            modelBuilder.Entity("AKS.Domain.Entities.Equipment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("DeliveryCompleted")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeliveryStated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("OrderFulfilled")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("OrderPayed")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("OrderPlaced")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex(new[] { "CustomerId" }, "IX_Orders_CustomerId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("AKS.Domain.Entities.OrderItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("money");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Quantity")
+                    b.Property<int?>("Attack")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Points")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Rule")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex(new[] { "UnitId" }, "IX_Units_UnitId");
 
-                    b.HasIndex(new[] { "ProductId" }, "IX_OrderItem_ProductId");
-
-                    b.ToTable("OrderItems");
+                    b.ToTable("Equipments");
                 });
 
-            modelBuilder.Entity("AKS.Domain.Entities.OrderToppingItem", b =>
+            modelBuilder.Entity("AKS.Domain.Entities.Unit", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("OrderItemId")
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("money");
-
-                    b.Property<int>("Quantity")
+                    b.Property<int>("Accuracy")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("ToppingId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("Attack")
+                        .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Defense")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("OrderItemId");
+                    b.Property<int>("Health")
+                        .HasColumnType("integer");
 
-                    b.HasIndex(new[] { "ToppingId" }, "IX_OrderToppingItem_ToppingId");
-
-                    b.ToTable("OrderToppingItems");
-                });
-
-            modelBuilder.Entity("AKS.Domain.Entities.Product", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<int>("Movement")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("money");
+                    b.Property<decimal>("Points")
+                        .HasColumnType("numeric");
 
-                    b.HasKey("Id");
+                    b.Property<decimal>("Range")
+                        .HasColumnType("numeric");
 
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("AKS.Domain.Entities.Topping", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("Rule")
                         .HasColumnType("text");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("money");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "ProductId" }, "IX_Products_ProductId");
+                    b.ToTable("Units");
+                });
 
-                    b.ToTable("Toppings");
+            modelBuilder.Entity("AKS.Domain.Entities.BattleGroup", b =>
+                {
+                    b.HasOne("AKS.Domain.Entities.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("AKS.Domain.Entities.BattleGroupUnit", b =>
+                {
+                    b.HasOne("AKS.Domain.Entities.BattleGroup", "BattleGroup")
+                        .WithMany("BattleGroupUnits")
+                        .HasForeignKey("BattleGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BattleGroup");
+                });
+
+            modelBuilder.Entity("AKS.Domain.Entities.BattleGroupUnitEquipment", b =>
+                {
+                    b.HasOne("AKS.Domain.Entities.BattleGroupUnit", "BattleGroupUnit")
+                        .WithMany("BattleGroupUnitEquipments")
+                        .HasForeignKey("BattleGroupUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BattleGroupUnit");
                 });
 
             modelBuilder.Entity("AKS.Domain.Entities.Customer", b =>
@@ -223,94 +296,25 @@ namespace AKS.Infrastructure.Migrations
                     b.Navigation("Address");
                 });
 
-            modelBuilder.Entity("AKS.Domain.Entities.Order", b =>
+            modelBuilder.Entity("AKS.Domain.Entities.Equipment", b =>
                 {
-                    b.HasOne("AKS.Domain.Entities.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
+                    b.HasOne("AKS.Domain.Entities.Unit", "Unit")
+                        .WithMany("Equipments")
+                        .HasForeignKey("UnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("AKS.Domain.Values.Address", "ShipmentAddress", b1 =>
-                        {
-                            b1.Property<Guid>("OrderId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("City")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
-
-                            b1.Property<string>("Country")
-                                .IsRequired()
-                                .HasMaxLength(90)
-                                .HasColumnType("character varying(90)");
-
-                            b1.Property<double>("Latitude")
-                                .HasColumnType("double precision");
-
-                            b1.Property<double>("Longitude")
-                                .HasColumnType("double precision");
-
-                            b1.Property<string>("State")
-                                .HasMaxLength(60)
-                                .HasColumnType("character varying(60)");
-
-                            b1.Property<string>("Street")
-                                .IsRequired()
-                                .HasMaxLength(180)
-                                .HasColumnType("character varying(180)");
-
-                            b1.Property<string>("ZipCode")
-                                .IsRequired()
-                                .HasMaxLength(18)
-                                .HasColumnType("character varying(18)");
-
-                            b1.HasKey("OrderId");
-
-                            b1.ToTable("Orders");
-
-                            b1.WithOwner()
-                                .HasForeignKey("OrderId");
-                        });
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("ShipmentAddress")
-                        .IsRequired();
+                    b.Navigation("Unit");
                 });
 
-            modelBuilder.Entity("AKS.Domain.Entities.OrderItem", b =>
+            modelBuilder.Entity("AKS.Domain.Entities.BattleGroup", b =>
                 {
-                    b.HasOne("AKS.Domain.Entities.Order", "Order")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
+                    b.Navigation("BattleGroupUnits");
                 });
 
-            modelBuilder.Entity("AKS.Domain.Entities.OrderToppingItem", b =>
+            modelBuilder.Entity("AKS.Domain.Entities.BattleGroupUnit", b =>
                 {
-                    b.HasOne("AKS.Domain.Entities.OrderItem", "OrderItem")
-                        .WithMany("OrderToppingItems")
-                        .HasForeignKey("OrderItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OrderItem");
-                });
-
-            modelBuilder.Entity("AKS.Domain.Entities.Topping", b =>
-                {
-                    b.HasOne("AKS.Domain.Entities.Product", "Product")
-                        .WithMany("Toppings")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
+                    b.Navigation("BattleGroupUnitEquipments");
                 });
 
             modelBuilder.Entity("AKS.Domain.Entities.Customer", b =>
@@ -318,19 +322,9 @@ namespace AKS.Infrastructure.Migrations
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("AKS.Domain.Entities.Order", b =>
+            modelBuilder.Entity("AKS.Domain.Entities.Unit", b =>
                 {
-                    b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("AKS.Domain.Entities.OrderItem", b =>
-                {
-                    b.Navigation("OrderToppingItems");
-                });
-
-            modelBuilder.Entity("AKS.Domain.Entities.Product", b =>
-                {
-                    b.Navigation("Toppings");
+                    b.Navigation("Equipments");
                 });
 #pragma warning restore 612, 618
         }

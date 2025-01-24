@@ -9,11 +9,11 @@ namespace AKS.Domain.Entities;
 public class Customer
 {
     [Key]
-    public Guid Id { get; init; }
+    public System.Guid Id { get; init; }
     public required string FirstName { get; init; }
     public required string LastName { get; init; }
     public Address? Address { get; init; }
 
 
-    public ICollection<Order> Orders { get; init; } = null!;
+    public ICollection<BattleGroup> Orders { get; init; } = null!;
 }
