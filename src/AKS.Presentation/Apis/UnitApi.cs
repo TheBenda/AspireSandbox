@@ -17,7 +17,7 @@ public static class UnitApi
 {
     public static void MapUnitEndpoints(this IEndpointRouteBuilder routes)
     {
-        RouteGroupBuilder group = routes.MapGroup("/api/Unit").WithTags("Unit")
+        var group = routes.MapGroup("/api/Unit").WithTags("Unit")
             .WithSummary("Endpoints for creating a product to the possible products to choose from later.");
 
         group.MapPost("/", async (CreateUnit request, IMessageBus messageBus, CancellationToken cancellationToken) =>
@@ -32,7 +32,7 @@ public static class UnitApi
                 async Task<Results<Ok, NotFound<ProblemDetails>>> (Guid unitId, IMessageBus messageBus,
                     CancellationToken cancellationToken) =>
                 {
-                    UnitDeleted productDeleted =
+                    var productDeleted =
                         await messageBus.InvokeAsync<UnitDeleted>(DeleteUnit.New(unitId), cancellationToken);
                     return productDeleted.Result.Type switch
                     {
@@ -52,7 +52,7 @@ public static class UnitApi
                 async Task<Results<Ok<UnitsFound>, ProblemHttpResult>> (IMessageBus messageBus,
                     CancellationToken cancellationToken) =>
                 {
-                    UnitsFound foundProducts =
+                    var foundProducts =
                         await messageBus.InvokeAsync<UnitsFound>(new FindUnits(), cancellationToken);
                     return TypedResults.Ok(foundProducts);
                 })

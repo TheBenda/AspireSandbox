@@ -14,16 +14,16 @@ public static class EquipmentApi
 {
     public static void MapEquipmentEndpoints(this IEndpointRouteBuilder routes)
     {
-        RouteGroupBuilder? toppingGroup = routes.MapGroup("/api/equipments")
+        var eqipmentsGroup = routes.MapGroup("/api/equipments")
             .WithTags("Equipment")
             .WithSummary("Endpoints to add equipments to a unit.");
 
-        toppingGroup.MapPost("/{unitId:guid}",
+        eqipmentsGroup.MapPost("/{unitId:guid}",
                 async Task<Results<Created<UnitDto>, NotFound<ProblemDetails>>> (Guid unitId,
                     AddEquipmentToUnitRequest request, IMessageBus messageBus,
                     CancellationToken cancellationToken) =>
                 {
-                    AddedEquipmentToUnit? addedToppingResult =
+                    var addedToppingResult =
                         await messageBus.InvokeAsync<AddedEquipmentToUnit>(request.ToCommand(unitId),
                             cancellationToken);
 
@@ -43,11 +43,11 @@ public static class EquipmentApi
             .WithName("AddEquipmentToUnit")
             .WithOpenApi();
 
-        toppingGroup.MapDelete("/{unitId:guid}/{equipmentId:guid}",
+        eqipmentsGroup.MapDelete("/{unitId:guid}/{equipmentId:guid}",
                 async Task<Results<Ok, NotFound<ProblemDetails>>> (Guid unitId, Guid equipmentId,
                     IMessageBus messageBus, CancellationToken cancellationToken) =>
                 {
-                    EquipmentDeleted? toppingDeleted =
+                    var toppingDeleted =
                         await messageBus.InvokeAsync<EquipmentDeleted>(DeleteEquipment.New(unitId, equipmentId),
                             cancellationToken);
                     return toppingDeleted.Result.Type switch

@@ -24,21 +24,22 @@ public static class BattleGroupApi
                 CancellationToken cancellationToken) =>
             {
                 CreateBattleGroup command = new(ownerId, request.GroupName);
-                BattleGroupCreated createdCustomer =
+                BattleGroupCreated createdBattleGroup =
                     await messageBus.InvokeAsync<BattleGroupCreated>(command, cancellationToken);
-                return TypedResults.Created("/api/Customer/", createdCustomer);
+                return TypedResults.Created("/api/Customer/", createdBattleGroup);
             })
             .WithName("CreateEmptyBattleGroup")
             .WithOpenApi();
 
-        group.MapPost("/{battleGroupId:guid}/add/unit/{unitId:guid}",
-                async Task<Results<Ok<BattleGroupDto>, NotFound<ProblemDetails>>> (Guid battleGroupId, Guid unitId,
+        group.MapPost("/{battleGroupId:guid}/add/unit",
+                async Task<Results<Ok<BattleGroupDto>, NotFound<ProblemDetails>>> (Guid battleGroupId,
+                    AddUnitToBattleGroupRequest request,
                     IMessageBus messageBus,
                     CancellationToken cancellationToken) =>
                 {
                     BattleGroupUnitCreated result =
                         await messageBus.InvokeAsync<BattleGroupUnitCreated>(
-                            CreateBattleGroupUnit.New(battleGroupId, unitId), cancellationToken);
+                            CreateBattleGroupUnit.New(battleGroupId, request.UnitId), cancellationToken);
                     return result.BattleGroupResult.Type switch
                     {
                         ResultType.Result => TypedResults.Ok(result.BattleGroupResult.Result!.Value),
@@ -50,18 +51,18 @@ public static class BattleGroupApi
                         })
                     };
                 })
-            .WithName("CreateEmptyBattleGroupUnit")
+            .WithName("AddUnitToBattleGroup")
             .WithOpenApi();
 
-        group.MapPost("/{battleGroupId:guid}/add/unit/{unitId:guid}/equipment/{equipmentId:guid}",
+        group.MapPost("/{battleGroupId:guid}/add/unit/{unitId:guid}/equipment",
                 async Task<Results<Ok<BattleGroupDto>, NotFound<ProblemDetails>>> (
-                    Guid battleGroupId, Guid unitId, Guid equipmentId,
+                    Guid battleGroupId, Guid unitId, AddEquipmentToBattleGroupRequest request,
                 IMessageBus messageBus,
                 CancellationToken cancellationToken) =>
             {
                 BattleGroupEquipmentCreated battleGroupEquipmentCreated =
                     await messageBus.InvokeAsync<BattleGroupEquipmentCreated>(
-                        new CreateBattleGroupEquipment(battleGroupId, unitId, equipmentId), cancellationToken);
+                        new CreateBattleGroupEquipment(battleGroupId, unitId, request.EquipmentId), cancellationToken);
                 return battleGroupEquipmentCreated.Result.Type switch
                 {
                     ResultType.Result => TypedResults.Ok(battleGroupEquipmentCreated.Result.Result!.Value),
@@ -99,3 +100,7 @@ public static class BattleGroupApi
 }
 
 public record CreateBattleGroupRequest(string GroupName);
+
+public record AddUnitToBattleGroupRequest(Guid UnitId);
+
+public record AddEquipmentToBattleGroupRequest(Guid EquipmentId);
